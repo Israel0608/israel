@@ -218,61 +218,50 @@ $(() => {
             selectedCoins.pop()
           })
 
-          const closeModalBtn = document.getElementById("closeModalBtn");
-          // Close modal button, canceling the 6 coin and un toggle at main
-          closeModalBtn.addEventListener("click", function () {
-            const removeId = selectedCoins[5];
-            for (const check of checkBoxArr) {
-              if (check.id == removeId) {
-                check.checked = false
-              }
-            }
-            selectedCoins.pop()
-          })
+         // אתחול קבועים לחישוב הלחיצות
+let clickCount = 0;
+const maxClicks = 5;
 
-          // check for disabled coin restricting one
-          saveChangesModal.addEventListener("click", function () {
-            let disabledInputCount = 0;
-            let removeCoinId = '';
+// טיפוס אלמנטי הכפתור שמוביל למודל
+const openModalButton = document.getElementById("openModalButton");
+const closeModalButton = document.getElementById("closeModalButton");
+const saveChangesModalButton = document.getElementById("saveChangesModal");
 
-            // Count the number of disabled inputs
-            for (const checkModal of checkBoxModal) {
-              if (checkModal.checked === false) {
-                disabledInputCount++;
-                removeCoinId = checkModal.id.slice(0, -5);
-              }
-            }
+// הוספת מאזין ללחיצה על הכפתור המוביל למודל
+openModalButton.addEventListener("click", () => {
+  clickCount++;
+  if (clickCount === maxClicks) {
+    clickCount = 0; // איפוס המונה לאחר פתיחת המודל
+    // כאן אתה יכול לפתוח את המודל באמצעות JS
+    $("#exampleModal").modal("show");
+    // כאן יש להציג במודל את המטבעות שנבחרו עד כה, אם יש כאלה
+    displaySelectedCoins(); // פונקציה שמציגה את המטבעות שנבחרו
+  }
+});
 
-            if (disabledInputCount !== 1) {
-              return;
-            }
-            const removeIndexChange = selectedCoins.findIndex(item => item === removeCoinId);
-            selectedCoins.splice(removeIndexChange, 1);
+// הוספת מאזין לסגירת המודל
+closeModalButton.addEventListener("click", () => {
+  clickCount = 0; // איפוס המונה במידה והמשתמש ביטל את הבחירה
+  // כאן אתה יכול לסגור את המודל באמצעות JS
+  $("#exampleModal").modal("hide");
+});
 
-            for (const check of checkBoxArr) {
-              if (check.id === removeCoinId) {
-                check.checked = false;
-              }
+// הוספת מאזין לשמירת השינויים במודל
+saveChangesModalButton.addEventListener("click", () => {
+  // כאן אתה יכול לבדוק אילו מטבעות נבחרו ולבצע את הטיפול המתאים
+  // המטבעות שנבחרו מופיעים בתוך המשתנה selectedCoins
+  // אפשר להשתמש בפונקציה saveSelectedCoinsToServer(selectedCoins); לשמירת המטבעות בשרת
+  clickCount = 0; // איפוס המונה לאחר ש
             }
-            exampleModal.hide();
-          })
-        }
-        function checkswitchtoggle() {
-          if (selectedCoins.length > 0) {
-            for (const photo of photos) {
-              for (const check of checkBoxArr) {
-                if (photo == check.id) {
-                  check.checked = true;
-                }
-              }
-            }
-          }
-        }
+            )
+            
         async function savePhotoDataToSessionStorage(photoData) {
           const json = json.stringify(photoData);
           sessionStorage.setItem(cards_data_KEY, json)
         }
+      }
       })
+      
 
 
 
