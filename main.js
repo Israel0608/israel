@@ -229,6 +229,5 @@ $(() => {
 
 
 
-
     //  אם אני רוצה להשתמש בזה שמתי את זה למעלה בcard בין ה symbol לבין ה a href
 /* <p class="card-text">${photos[i].current_price}$</p> */
