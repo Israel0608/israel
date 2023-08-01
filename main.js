@@ -161,108 +161,68 @@ $(() => {
           function hideSpinner() {
             $(".spinner").removeClass("show");
           }
-          function getAndDisplayCrypto() {
-            return new Promise(async (resolve, reject) => {
-              try {
-                const Crypto = await getCrypto(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1`);
-                displayCrypto(crypto);
-                resolve(crypto);
-              } catch (error) {
-                reject(error);
-              }
-            });
-          }
-          // function displayAbout(){
-          //   mainContent.innerHTML = `
+          // ...
 
-          //   `
-          // }
-          for (const check of checkBoxArr) {
-            check.addEventListener("click", function () {
-              if (check.checked === true) {
-                SelectedCoin = check.id;
-                selectedCoins.push(SelectedCoin);
-                check.checked;
-              }
-              if (check.checked === false) {
-                const unCheckIndex = selectedCoins.findIndex(item => item === check.id);
-                selectedCoins.splice(unCheckIndex, 1);
-              }
-              if (selectedCoins.length > 5) {
-                myModal.show()
-                let html = `<p>You can only Select 5 Currencies, Please choose one to Add 
-              ${check.id}, Or cancel</p>`
-                for (let i = 0; i < selectedCoins.length - 1; i++) {
-                  html += `
-                  <div class="card" id="${photos[i].id}" style="width: 18rem;">
-                  <div class="card-body">
-                    <h5 class="card-title">${photos[i].symbol}</h5>
-                    <label class="switch float-end">
-                    <input type="checkbox" checked class="checkBoxModal" id="${photos[i].id}Modal">
-                    <span class="slider round"></span>
-                </label>                        </div>
-                </div>
-                  `
-                }
-                cardModalContainer.innerHTML = html;
-              }
-            })
-          }
-          closeModal.addEventListener("click", function () {
-            const removeId = selectedCoins[5];
-            for (const check of checkBoxArr) {
-              if (check.id == removeId) {
-                check.checked = false
-              }
-            }
-            selectedCoins.pop()
-          })
-
-         // אתחול קבועים לחישוב הלחיצות
-let clickCount = 0;
-const maxClicks = 5;
-
-// טיפוס אלמנטי הכפתור שמוביל למודל
-const openModalButton = document.getElementById("openModalButton");
-const closeModalButton = document.getElementById("closeModalButton");
-const saveChangesModalButton = document.getElementById("saveChangesModal");
-
-// הוספת מאזין ללחיצה על הכפתור המוביל למודל
-openModalButton.addEventListener("click", () => {
-  clickCount++;
-  if (clickCount === maxClicks) {
-    clickCount = 0; // איפוס המונה לאחר פתיחת המודל
-    // כאן אתה יכול לפתוח את המודל באמצעות JS
-    $("#exampleModal").modal("show");
-    // כאן יש להציג במודל את המטבעות שנבחרו עד כה, אם יש כאלה
-    displaySelectedCoins(); // פונקציה שמציגה את המטבעות שנבחרו
-  }
-});
-
-// הוספת מאזין לסגירת המודל
-closeModalButton.addEventListener("click", () => {
-  clickCount = 0; // איפוס המונה במידה והמשתמש ביטל את הבחירה
-  // כאן אתה יכול לסגור את המודל באמצעות JS
-  $("#exampleModal").modal("hide");
-});
-
-// הוספת מאזין לשמירת השינויים במודל
-saveChangesModalButton.addEventListener("click", () => {
-  // כאן אתה יכול לבדוק אילו מטבעות נבחרו ולבצע את הטיפול המתאים
-  // המטבעות שנבחרו מופיעים בתוך המשתנה selectedCoins
-  // אפשר להשתמש בפונקציה saveSelectedCoinsToServer(selectedCoins); לשמירת המטבעות בשרת
-  clickCount = 0; // איפוס המונה לאחר ש
-            }
-            )
-            
-        async function savePhotoDataToSessionStorage(photoData) {
-          const json = json.stringify(photoData);
-          sessionStorage.setItem(cards_data_KEY, json)
+// New function to handle the 6th coin selection
+function replaceSelectedCoin(event) {
+  const target = event.target;
+  if (target.classList.contains("btn-primary")) {
+    const selectedCoinCount = selectedCoins.length;
+    if (selectedCoinCount < maxSelectedCoins) {
+      const coinSymbol = target.getAttribute("data-coin-symbol");
+      const selectedCoin = currentDisplayedCoins.find((c) => c.symbol === coinSymbol);
+      if (!selectedCoins.includes(selectedCoin)) {
+        selectedCoins.push(selectedCoin);
+        if (selectedCoinCount === maxSelectedCoins - 1) {
+          openModal();
         }
+        updateSelectedCoinsModal();
       }
-      })
-      
+    } else if (selectedCoinCount === maxSelectedCoins) {
+      openModal();
+    }
+  }
+}
 
+function openModal() {
+  modal.style.display = "block";
+  const modalBody = document.getElementById("exampleModalBody");
+  modalBody.innerHTML = `
+    <p>You can only select 5 currencies. Please choose one to add or cancel:</p>
+    <ul>
+      ${selectedCoins
+        .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
+        .join("")}
+    </ul>
+  `;
+}
+
+function closeSelectedCoinsModal() {
+  modal.style.display = "none";
+}
+
+function updateSelectedCoinsModal() {
+  const selectedCoinsModalContent = document.getElementById("selectedCoinsModalContent");
+  selectedCoinsModalContent.innerHTML = `
+    <h4>Selected Coins:</h4>
+    <ul>
+      ${selectedCoins
+        .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
+        .join("")}
+    </ul>
+  `;
+}
+
+function saveSelectedCoins() {
+  const coinToRemove = selectedCoins.length === maxSelectedCoins ? selectedCoins.pop() : null;
+  closeSelectedCoinsModal();
+  // You can implement your logic here to handle the selected coins
+  // For example, you can update the main content to display the selected coins.
+  // The selected coins are stored in the "selectedCoins" array.
+  // You can also save the selected coins in session storage or perform any other action.
+}
+}
+})
 
 
 
@@ -276,4 +236,4 @@ saveChangesModalButton.addEventListener("click", () => {
 
 
     //  אם אני רוצה להשתמש בזה שמתי את זה למעלה בcard בין ה symbol לבין ה a href
-    {/* <p class="card-text">${photos[i].current_price}$</p> */ }
+    /* <p class="card-text">${photos[i].current_price}$</p> */ 
