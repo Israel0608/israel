@@ -1,5 +1,4 @@
 "use strict";
-//  sdkddk
 $(() => {
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
@@ -7,9 +6,15 @@ $(() => {
   const aboutLink = document.getElementById("aboutLink");
   const mainContent = document.getElementById("mainContent");
 
-  currenciesLink.addEventListener("click", displayCurrencies);
-  reportsLink.addEventListener("click", displayReports);
-  aboutLink.addEventListener("click", displayAbout);
+  currenciesLink.addEventListener("click", () => {
+    displayCurrencies();
+  });
+  reportsLink.addEventListener("click", () =>  {
+    displayReports()
+  });
+  aboutLink.addEventListener("click", () => {
+    displayAbout()
+  });
 
   const searchBar = document.getElementById("searchBar");
   searchBar.addEventListener('keyup', async function () {
