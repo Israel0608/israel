@@ -9,7 +9,7 @@ $(() => {
   currenciesLink.addEventListener("click", () => {
     displayCurrencies();
   });
-  reportsLink.addEventListener("click", () =>  {
+  reportsLink.addEventListener("click", () => {
     displayReports()
   });
   aboutLink.addEventListener("click", () => {
@@ -82,40 +82,40 @@ $(() => {
         }
         resolve();
       } catch (error) {
-          reject(error);
+        reject(error);
       }
-  }).catch((error) => {
+    }).catch((error) => {
       console.log("Error while fetching more coin info", error);
-  });
-})
+    });
+  })
 
-        function displayCurrencies() {
-          mainContent.innerHTML = `<h1>Currencies...</h1>`;
-        }
+  function displayCurrencies() {
+    mainContent.innerHTML = `<h1>Currencies...</h1>`;
+  }
 
-        function displayReports() {
-          mainContent.innerHTML = `<h1>Reports...</h1>`;
-        }
+  function displayReports() {
+    mainContent.innerHTML = `<h1>Reports...</h1>`;
+  }
 
-        function displayAbout() {
-          mainContent.innerHTML = `<h1>About...</h1>`
+  function displayAbout() {
+    mainContent.innerHTML = `<h1>About...</h1>`
 
-        }
-        async function userImage() {
-          const card = await getJson();
-          displayCrypto(card);
-        }
+  }
+  async function userImage() {
+    const card = await getJson();
+    displayCrypto(card);
+  }
 
-        async function getJson() {
-          const respose = await fetch("api.json");
-          const json = await respose.json();
-          return json;
-        }
+  async function getJson() {
+    const respose = await fetch("api.json");
+    const json = await respose.json();
+    return json;
+  }
 
 
-        function displayCrypto(photos) {
-          for (let i = 0; i < photos.length; i++) {
-            $("#mainContent").append(`
+  function displayCrypto(photos) {
+    for (let i = 0; i < photos.length; i++) {
+      $("#mainContent").append(`
         <div id = "${photos[i].id}" class="card" style="width: 18rem;">
         <div id = "Toggle" class="form-switch">
         <input class="form-check-input" type="checkbox" role="switch" id="switchtoggle">
@@ -130,98 +130,98 @@ $(() => {
            </div>
         </div>
       `);
-          }
-          const btns = document.querySelectorAll('.btn-primary');
-          btns.forEach(function (btn) {
-            btn.addEventListener("click", async function (event) {
-              event.preventDefault();
-              const moreInfo = this.closest('.card').querySelector('.moreInfo');
-              moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
-              const cryptoId = this.closest(`.card`).id;
+    }
+    const btns = document.querySelectorAll('.btn-primary');
+    btns.forEach(function (btn) {
+      btn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        const moreInfo = this.closest('.card').querySelector('.moreInfo');
+        moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
+        const cryptoId = this.closest(`.card`).id;
 
-              const json = await getCrypto(cryptoId);
-              moreInfo.innerHTML = `
+        const json = await getCrypto(cryptoId);
+        moreInfo.innerHTML = `
         <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
         <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
         <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
       `
-            })
+      })
 
-            async function getCrypto(id) {
-              const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
-              const json = await data.json();
-              return json;
+      async function getCrypto(id) {
+        const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
+        const json = await data.json();
+        return json;
 
+      }
+    })
+    function showSpinner() {
+      $(".spinner").addClass("show");
+    }
+
+    function hideSpinner() {
+      $(".spinner").removeClass("show");
+    }
+    // ...
+
+    // New function to handle the 6th coin selection
+    function replaceSelectedCoin(event) {
+      const target = event.target;
+      if (target.classList.contains("btn-primary")) {
+        const selectedCoinCount = selectedCoins.length;
+        if (selectedCoinCount < maxSelectedCoins) {
+          const coinSymbol = target.getAttribute("data-coin-symbol");
+          const selectedCoin = currentDisplayedCoins.find((c) => c.symbol === coinSymbol);
+          if (!selectedCoins.includes(selectedCoin)) {
+            selectedCoins.push(selectedCoin);
+            if (selectedCoinCount === maxSelectedCoins - 1) {
+              openModal();
             }
-          })
-          function showSpinner() {
-            $(".spinner").addClass("show");
+            updateSelectedCoinsModal();
           }
-
-          function hideSpinner() {
-            $(".spinner").removeClass("show");
-          }
-          // ...
-
-// New function to handle the 6th coin selection
-function replaceSelectedCoin(event) {
-  const target = event.target;
-  if (target.classList.contains("btn-primary")) {
-    const selectedCoinCount = selectedCoins.length;
-    if (selectedCoinCount < maxSelectedCoins) {
-      const coinSymbol = target.getAttribute("data-coin-symbol");
-      const selectedCoin = currentDisplayedCoins.find((c) => c.symbol === coinSymbol);
-      if (!selectedCoins.includes(selectedCoin)) {
-        selectedCoins.push(selectedCoin);
-        if (selectedCoinCount === maxSelectedCoins - 1) {
+        } else if (selectedCoinCount === maxSelectedCoins) {
           openModal();
         }
-        updateSelectedCoinsModal();
       }
-    } else if (selectedCoinCount === maxSelectedCoins) {
-      openModal();
     }
-  }
-}
 
-function openModal() {
-  modal.style.display = "block";
-  const modalBody = document.getElementById("exampleModalBody");
-  modalBody.innerHTML = `
+    function openModal() {
+      modal.style.display = "block";
+      const modalBody = document.getElementById("exampleModalBody");
+      modalBody.innerHTML = `
     <p>You can only select 5 currencies. Please choose one to add or cancel:</p>
     <ul>
       ${selectedCoins
-        .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
-        .join("")}
+          .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
+          .join("")}
     </ul>
   `;
-}
+    }
 
-function closeSelectedCoinsModal() {
-  modal.style.display = "none";
-}
+    function closeSelectedCoinsModal() {
+      modal.style.display = "none";
+    }
 
-function updateSelectedCoinsModal() {
-  const selectedCoinsModalContent = document.getElementById("selectedCoinsModalContent");
-  selectedCoinsModalContent.innerHTML = `
+    function updateSelectedCoinsModal() {
+      const selectedCoinsModalContent = document.getElementById("selectedCoinsModalContent");
+      selectedCoinsModalContent.innerHTML = `
     <h4>Selected Coins:</h4>
     <ul>
       ${selectedCoins
-        .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
-        .join("")}
+          .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
+          .join("")}
     </ul>
   `;
-}
+    }
 
-function saveSelectedCoins() {
-  const coinToRemove = selectedCoins.length === maxSelectedCoins ? selectedCoins.pop() : null;
-  closeSelectedCoinsModal();
-  // You can implement your logic here to handle the selected coins
-  // For example, you can update the main content to display the selected coins.
-  // The selected coins are stored in the "selectedCoins" array.
-  // You can also save the selected coins in session storage or perform any other action.
-}
-}
+    function saveSelectedCoins() {
+      const coinToRemove = selectedCoins.length === maxSelectedCoins ? selectedCoins.pop() : null;
+      closeSelectedCoinsModal();
+      // You can implement your logic here to handle the selected coins
+      // For example, you can update the main content to display the selected coins.
+      // The selected coins are stored in the "selectedCoins" array.
+      // You can also save the selected coins in session storage or perform any other action.
+    }
+  }
 })
 
 
@@ -230,10 +230,5 @@ function saveSelectedCoins() {
 
 
 
-
-
-
-
-
     //  אם אני רוצה להשתמש בזה שמתי את זה למעלה בcard בין ה symbol לבין ה a href
-    /* <p class="card-text">${photos[i].current_price}$</p> */ 
+/* <p class="card-text">${photos[i].current_price}$</p> */
