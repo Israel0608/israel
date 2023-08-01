@@ -162,6 +162,8 @@ $(() => {
       $(".spinner").removeClass("show");
     }
     // ...
+    let clickCount = 0;
+    const maxSelectedCoins = 5;
 
     // New function to handle the 6th coin selection
     function replaceSelectedCoin(event) {
@@ -182,19 +184,6 @@ $(() => {
           openModal();
         }
       }
-    }
-
-    function openModal() {
-      modal.style.display = "block";
-      const modalBody = document.getElementById("exampleModalBody");
-      modalBody.innerHTML = `
-    <p>You can only select 5 currencies. Please choose one to add or cancel:</p>
-    <ul>
-      ${selectedCoins
-          .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
-          .join("")}
-    </ul>
-  `;
     }
 
     function closeSelectedCoinsModal() {

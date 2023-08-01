@@ -18,62 +18,82 @@
 
 <body>
     <h1>Projact Structure</h1>
-    <!-- <div class="nav-bar">
-        <a id="currenciesLink" href="javascript:void(0)">Crrencies</a>
-        <span></span>
-        <a id="reportsLink" href="javascript:void(0)">Reports</a>
-        <span></span>
-        <a id="aboutLink" href="javascript:void(0)">About</a>
-    </div> -->
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Coins</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="currenciesLink">Currencies</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="reportsLink">Reports</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="aboutLink">About</a>
-                    </li>
-                </ul>
-
-                <input class="form-control me-2" type="search" placeholder="Search" id="searchBar" aria-label="Search">
-
-            </div>
+          <a class="navbar-brand" href="#">Coins</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" id="currenciesLink">Currencies</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="reportsLink">Reports</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="aboutLink">About</a>
+              </li>
+            </ul>
+    
+            <input class="form-control me-2" type="search" placeholder="Search" id="searchBar" aria-label="Search">
+    
+          </div>
         </div>
-    </nav>
-
-
-    <div class="container" id="mainContent">
+      </nav>
+    
+      <div class="container" id="mainContent">
         <h1>Currencies...</h1>
-    </div>
-
-        
-<!-- Add this modal inside the "body" element in your HTML -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title" id="exampleModalLabel">Choose One Coin to Add</h1>
-        <button type="button" class="modalClose" data-dismiss="modal" aria-label="Close"></button>
-          <p>There are limitations of selected currencies, if you want to add the last currency you selected, you will have to remove one currency from the list</p>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="saveChangesModal">Save Changes</button>
       </div>
-    </div>
-  </div>
-</div>
+    
+      <!-- Button to trigger the modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Open Modal
+      </button>
+    
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Your content here -->
+              <p>This is the modal content.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Add this modal inside the "body" element in your HTML -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title" id="exampleModalLabel">Choose One Coin to Add</h1>
+              <button type="button" class="modalClose" data-dismiss="modal" aria-label="Close"></button>
+              <p>There are limitations of selected currencies, if you want to add the last currency you selected, you will
+                have to remove one currency from the list</p>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveChangesModal">Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 
