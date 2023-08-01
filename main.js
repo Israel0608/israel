@@ -6,6 +6,11 @@ $(() => {
   const reportsLink = document.getElementById("reportsLink");
   const aboutLink = document.getElementById("aboutLink");
   const mainContent = document.getElementById("mainContent");
+  const selectedCards = [];
+  const selectedCardsModal = document.getElementById("staticBackdrop");
+  const loadingModal = document.getElementById("loadingModal");
+  const modalLoad = new bootstrap.Modal(loadingModal);
+  const checkboxes = document.getElementsByClassName("toggle-one");
 
   currenciesLink.addEventListener("click", () => {
     displayCurrencies();
@@ -119,7 +124,8 @@ $(() => {
       $("#mainContent").append(`
         <div id = "${photos[i].id}" class="card" style="width: 18rem;">
         <div id = "Toggle" class="form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="switchtoggle">
+        <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].symbol}" id="check${i}">
+        <label class="toggle" for="check${i}"></label>
       </div>
           <img src="${photos[i].image}" class="card-coins">
           <div class="card-body">
@@ -180,10 +186,9 @@ $(() => {
             }
             updateSelectedCoinsModal();
           }
-        } else if (selectedCoin >= 5) {
+        } else if (selectedCoin === maxSelectedCoins) {
           openModal();
         }
-        selectedCoins.push(selectedCoin);
       }
       updateSelectedCoinsModal();
     }
