@@ -1,4 +1,5 @@
 "use strict";
+let selectedCoin = [];
 $(() => {
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
@@ -162,29 +163,38 @@ $(() => {
       $(".spinner").removeClass("show");
     }
     // ...
-    let clickCount = 0;
     const maxSelectedCoins = 5;
 
     // New function to handle the 6th coin selection
-    function replaceSelectedCoin(event) {
+    function handleCoinSelection(event) {
       const target = event.target;
       if (target.classList.contains("btn-primary")) {
         const selectedCoinCount = selectedCoins.length;
         if (selectedCoinCount < maxSelectedCoins) {
           const coinSymbol = target.getAttribute("data-coin-symbol");
           const selectedCoin = currentDisplayedCoins.find((c) => c.symbol === coinSymbol);
-          if (!selectedCoins.includes(selectedCoin)) {
+          if (selectedCoins.includes(selectedCoin)) {
             selectedCoins.push(selectedCoin);
             if (selectedCoinCount === maxSelectedCoins - 1) {
               openModal();
             }
             updateSelectedCoinsModal();
           }
-        } else if (selectedCoinCount === maxSelectedCoins) {
+        } else if (selectedCoin >= 5) {
           openModal();
         }
+        selectedCoins.push(selectedCoin);
       }
+      updateSelectedCoinsModal();
     }
+
+    $("#mainContent").on("click", ".btn-primary", handleCoinSelection);
+
+  // Function to open the modal
+  function openModal() {
+    $("#exampleModal").modal("show");
+    updateSelectedCoinsModal();
+  }
 
     function closeSelectedCoinsModal() {
       modal.style.display = "none";
@@ -203,14 +213,26 @@ $(() => {
     }
 
     function saveSelectedCoins() {
+      if(selectedCoin.length === 5){
       const coinToRemove = selectedCoins.length === maxSelectedCoins ? selectedCoins.pop() : null;
+      }
       closeSelectedCoinsModal();
+    }
+
+    document
+    .getElementById("saveChangesModal")
+    .addEventListener("click", saveSelectedCoins);
+
+  // Function to close the modal
+  function closeSelectedCoinsModal() {
+    $("#exampleModal").modal("hide");
+
       // You can implement your logic here to handle the selected coins
       // For example, you can update the main content to display the selected coins.
       // The selected coins are stored in the "selectedCoins" array.
       // You can also save the selected coins in session storage or perform any other action.
-    }
   }
+}
 })
 
 
