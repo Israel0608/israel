@@ -1,5 +1,5 @@
 "use strict";
-
+//  sdkddk
 $(() => {
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
