@@ -5,25 +5,26 @@ $(() => {
   const currenciesLink = document.getElementById("currenciesLink");
   const reportsLink = document.getElementById("reportsLink");
   const aboutLink = document.getElementById("aboutLink");
-  const mainContent = document.getElementById("mainContent");
-  const selectedCards = [];
-  const selectedCardsModal = document.getElementById("staticBackdrop");
-  const loadingModal = document.getElementById("loadingModal");
-  const modalLoad = new bootstrap.Modal(loadingModal);
-  const checkboxes = document.getElementsByClassName("toggle-one");
+  const mainContant = document.getElementById("mainContant")
 
-  currenciesLink.addEventListener("click", () => {
-    displayCurrencies();
-  });
-  reportsLink.addEventListener("click", () => {
-    displayReports()
-  });
-  aboutLink.addEventListener("click", () => {
-    displayAbout()
-  });
+  currenciesLink.addEventListener("click", displayCurrencies);
+  reportsLink.addEventListener("click", displayReports);
+  aboutLink.addEventListener("click", displayAbout);
+
+  function displayCurrencies(){
+    mainContant.innerHTML = `<h1>Currencies...</h1>`
+  }
+
+  function displayReports(){
+    mainContant.innerHTML = `<h1>Repoets...</h1>`
+  }
+
+  function displayAbout(){
+    mainContant.innerHTML = `<h1>About...</h1>`
+  }
 
   const searchBar = document.getElementById("searchBar");
-  searchBar.addEventListener('keyup', async function () {
+  searchBar.addEventListener('input', async function () {
     const searchValue = searchBar.value;
     const Data = await getJson("api.json");
     if (searchValue) {
@@ -38,75 +39,6 @@ $(() => {
     }
 
   })
-  $("div").on("click", ".moreInfo", function () {
-    return new Promise(async (resolve, reject) => {
-      try {
-        event.stopPropagation();
-        if (this.getAttribute("aria-expanded") === "true") {
-          const coinSessionData = await loadCoinDataFromSessionStorage();
-          if (!coinSessionData) {
-            showSpinner();
-            const json = await getCurrenciesInfo(this.id);
-            const coinData = makeMoreInfoDateArr(json);
-            coinsDataArr.push(coinData);
-            saveCoinDataToSessionStorage(coinsDataArr);
-            hideSpinner();
-            displayMoreInfo(coinData);
-          } else {
-            let foundMatchingCard = false;
-            for (let i = 0; i < coinSessionData.length; i++) {
-              if (coinSessionData[i].id === this.id) {
-                if (Date.now() - coinSessionData[i].time <= 120000) {
-                  displayMoreInfo(coinSessionData[i]);
-                  foundMatchingCoin = true;
-                  break;
-                } else {
-                  showSpinner();
-                  const json = await getCurrenciesInfo(this.id);
-                  const coinData = makeMoreInfoDateArr(json);
-                  coinsDataArr.push(coinData);
-                  coinSessionData[i] = coinData;
-                  saveCoinDataToSessionStorage(coinSessionData);
-                  hideSpinner();
-                  displayMoreInfo(coinData);
-                  foundMatchingCoin = true;
-                  break;
-                }
-              }
-            }
-            if (!foundMatchingCard) {
-              showSpinner();
-              const json = await getCurrenciesInfo(this.id);
-              const coinData = makeMoreInfoDateArr(json);
-              coinsDataArr.push(coinData);
-              coinSessionData.push(coinData);
-              saveCoinDataToSessionStorage(coinSessionData);
-              hideSpinner();
-              displayMoreInfo(coinData);
-            }
-          }
-        }
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    }).catch((error) => {
-      console.log("Error while fetching more coin info", error);
-    });
-  })
-
-  function displayCurrencies() {
-    mainContent.innerHTML = `<h1>Currencies...</h1>`;
-  }
-
-  function displayReports() {
-    mainContent.innerHTML = `<h1>Reports...</h1>`;
-  }
-
-  function displayAbout() {
-    mainContent.innerHTML = `<h1>About...</h1>`
-
-  }
   async function userImage() {
     const card = await getJson();
     displayCrypto(card);
@@ -124,8 +56,7 @@ $(() => {
       $("#mainContent").append(`
         <div id = "${photos[i].id}" class="card" style="width: 18rem;">
         <div id = "Toggle" class="form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].symbol}" id="check${i}">
-        <label class="toggle" for="check${i}"></label>
+        <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].symbol}">
       </div>
           <img src="${photos[i].image}" class="card-coins">
           <div class="card-body">
@@ -133,11 +64,80 @@ $(() => {
             <a href="" class="btn btn-primary">more info</a>
           </div>
            <div class="moreInfo">
-
+           <div name="spinner" class="spinner-border spinner-border-sm" role="status" style="display: none";></div>
+           </button>
+           <div>
+             <div class="collapse" id="collapseExample${i}">
+               <div id="infoCoin${i}" class="card card-body collapse-body"></div>
+             </div>
+           </div>
+         </div>
            </div>
         </div>
       `);
     }
+    $(".toggleCheck").on("click", function () {
+      if (this.checked === true) {
+        selectedCards.push(this.value);
+      }
+      if (this.checked === false) {
+        let uncheck = this.value;
+        const indexUncheck = selectedCards.findIndex((name) => name === uncheck);
+        selectedCards.splice(indexUncheck, 1);
+      }
+      if (selectedCards.length > 5) {
+        myModal.show();
+      }
+      const inModal = document.getElementById("inModal");
+      let htmlCard = "";
+      for (let i = 0; i < photos.length - 1; i++) {
+        htmlCard += `
+          <div class="card">
+              <div class="card-body cardModal">
+                <span class="nameSelectCard">${photos[i]}</span>
+                <span class="btn-toggle selected-toggle">
+                <input class="toggle-one ee" data-bs-dismiss="modal" type="checkbox" name="modalCheck" value="${selectedCards[i]}" id="checkModal${i}">
+                <label class="toggle" for="checkModal${i}"></label>
+              </span>
+              </div>
+            </div>`;
+      }
+      inModal.innerHTML = htmlCard;
+
+      const buttonsArr = document.getElementsByClassName("moreInfo");
+    for (let i = 0; i < buttonsArr.length; i++) {
+      buttonsArr[i].addEventListener("click", async function () {
+        if (this.getAttribute("aria-expanded") == "true") {
+          const moreInfoCoin = await getMoreInfoFromSessionOrHttps(this);
+          const collapse = document.getElementById(`infoCoin${i}`);
+          let htmlCol = "";
+          for (const item of moreInfoCoin) {
+            if (item.name === this.id) {
+              htmlCol += `
+              USD : ${item.usd} $<br>
+              EUR : ${item.eur} €<br>
+              ILS : ${item.ils} ₪<br>`;
+              collapse.innerHTML = htmlCol;
+            }
+          }
+        }
+      });
+    }
+  })
+
+  const modalClose = document.getElementById('modalClose');
+  modalClose.addEventListener('click', () => {
+    const lastItem = selectedCards[selectedCards.length - 1];
+    for (const x of checkboxes) {
+      if (x.value === lastItem) {
+        x.checked = false;
+      }
+    }
+    const index = selectedCards.findIndex(x => x === lastItem);
+    selectedCards.splice(index, 1);
+  });
+
+
     const btns = document.querySelectorAll('.btn-primary');
     btns.forEach(function (btn) {
       btn.addEventListener("click", async function (event) {
@@ -153,97 +153,14 @@ $(() => {
         <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
       `
       })
-
+    
       async function getCrypto(id) {
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const json = await data.json();
         return json;
-
+      
       }
     })
-    function showSpinner() {
-      $(".spinner").addClass("show");
-    }
 
-    function hideSpinner() {
-      $(".spinner").removeClass("show");
-    }
-    // ...
-    const maxSelectedCoins = 5;
-
-    // New function to handle the 6th coin selection
-    function handleCoinSelection(event) {
-      const target = event.target;
-      if (target.classList.contains("btn-primary")) {
-        const selectedCoinCount = selectedCoins.length;
-        if (selectedCoinCount < maxSelectedCoins) {
-          const coinSymbol = target.getAttribute("data-coin-symbol");
-          const selectedCoin = currentDisplayedCoins.find((c) => c.symbol === coinSymbol);
-          if (selectedCoins.includes(selectedCoin)) {
-            selectedCoins.push(selectedCoin);
-            if (selectedCoinCount === maxSelectedCoins - 1) {
-              openModal();
-            }
-            updateSelectedCoinsModal();
-          }
-        } else if (selectedCoin === maxSelectedCoins) {
-          openModal();
-        }
-      }
-      updateSelectedCoinsModal();
-    }
-
-    $("#mainContent").on("click", ".btn-primary", handleCoinSelection);
-
-  // Function to open the modal
-  function openModal() {
-    $("#exampleModal").modal("show");
-    updateSelectedCoinsModal();
   }
-
-    function closeSelectedCoinsModal() {
-      modal.style.display = "none";
-    }
-
-    function updateSelectedCoinsModal() {
-      const selectedCoinsModalContent = document.getElementById("selectedCoinsModalContent");
-      selectedCoinsModalContent.innerHTML = `
-    <h4>Selected Coins:</h4>
-    <ul>
-      ${selectedCoins
-          .map((coin) => `<li>${coin.name} (${coin.symbol})</li>`)
-          .join("")}
-    </ul>
-  `;
-    }
-
-    function saveSelectedCoins() {
-      if(selectedCoin.length === 5){
-      const coinToRemove = selectedCoins.length === maxSelectedCoins ? selectedCoins.pop() : null;
-      }
-      closeSelectedCoinsModal();
-    }
-
-    document
-    .getElementById("saveChangesModal")
-    .addEventListener("click", saveSelectedCoins);
-
-  // Function to close the modal
-  function closeSelectedCoinsModal() {
-    $("#exampleModal").modal("hide");
-
-      // You can implement your logic here to handle the selected coins
-      // For example, you can update the main content to display the selected coins.
-      // The selected coins are stored in the "selectedCoins" array.
-      // You can also save the selected coins in session storage or perform any other action.
-  }
-}
 })
-
-
-
-
-
-
-    //  אם אני רוצה להשתמש בזה שמתי את זה למעלה בcard בין ה symbol לבין ה a href
-/* <p class="card-text">${photos[i].current_price}$</p> */
