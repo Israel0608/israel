@@ -2,6 +2,8 @@
 $(() => {
   const moreInfo = [];
   let cards = [];
+  const Toggle = document.querySelector('.Toggle');
+  Toggle.addEventListener("click", showModal);
   const checkBox = document.getElementsByClassName(`form-check-input`);
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
@@ -122,89 +124,130 @@ $(() => {
     //         <input class="form-check-input-modal" type="checkbox" role="switch" id="${data.id}_modalSwitch">
     //       </div>
     //     </div>
-          
+
     //       `
     //   }
     //   $(".modal-footer").html(modalHtml);
 
     //   modal.show()
 
-      // $(".toggleCheck").on("click", function () {
-      //   if (this.checked === true) {
-      //     selectedCards.push(this.value);
-      //   }
-      //   if (this.checked === false) {
-      //     let uncheck = this.value;
-      //     const indexUncheck = selectedCards.findIndex((name) => name === uncheck);
-      //     selectedCards.splice(indexUncheck, 1);
-      //   }
-      //   if (selectedCards.length > 5) {
-      //     myModal.show();
-      //   }
+    // $(".toggleCheck").on("click", function () {
+    //   if (this.checked === true) {
+    //     selectedCards.push(this.value);
+    //   }
+    //   if (this.checked === false) {
+    //     let uncheck = this.value;
+    //     const indexUncheck = selectedCards.findIndex((name) => name === uncheck);
+    //     selectedCards.splice(indexUncheck, 1);
+    //   }
+    //   if (selectedCards.length > 5) {
+    //     myModal.show();
+    //   }
 
-      //     const inModal = document.getElementById("inModal");
-      //     let htmlCard = "";
-      //     for (let i = 0; i < photos.length - 1; i++) {
-      //       htmlCard += `
-      //         <div class="card">
-      //             <div class="card-body cardModal">
-      //               <span class="nameSelectCard">${photos[i]}</span>
-      //               <span class="btn-toggle selected-toggle">
-      //               <input class="toggle-one ee" data-bs-dismiss="modal" type="checkbox" name="modalCheck" value="${selectedCards[i]}" id="checkModal${i}">
-      //               <label class="toggle" for="checkModal${i}"></label>
-      //             </span>
-      //             </div>
-      //           </div>`;
-      //     }
-      //     inModal.innerHTML = htmlCard;
-      //   })
-      //   }
-      // })
+    //     const inModal = document.getElementById("inModal");
+    //     let htmlCard = "";
+    //     for (let i = 0; i < photos.length - 1; i++) {
+    //       htmlCard += `
+    //         <div class="card">
+    //             <div class="card-body cardModal">
+    //               <span class="nameSelectCard">${photos[i]}</span>
+    //               <span class="btn-toggle selected-toggle">
+    //               <input class="toggle-one ee" data-bs-dismiss="modal" type="checkbox" name="modalCheck" value="${selectedCards[i]}" id="checkModal${i}">
+    //               <label class="toggle" for="checkModal${i}"></label>
+    //             </span>
+    //             </div>
+    //           </div>`;
+    //     }
+    //     inModal.innerHTML = htmlCard;
+    //   })
+    //   }
+    // })
 
-      // const modalClose = document.getElementById('modalClose');
-      // modalClose.addEventListener('click', () => {
-      //   const lastItem = selectedCards[photos.length - 1];
-      //   for (const x of checkboxes) {
-      //     if (x.value === lastItem) {
-      //       x.checked = false;
-      //     }
-      //   }
-      //   const index = selectedCards.findIndex(x => x === lastItem);
-      //   selectedCards.splice(index, 1);
-      // });
+    // const modalClose = document.getElementById('modalClose');
+    // modalClose.addEventListener('click', () => {
+    //   const lastItem = selectedCards[photos.length - 1];
+    //   for (const x of checkboxes) {
+    //     if (x.value === lastItem) {
+    //       x.checked = false;
+    //     }
+    //   }
+    //   const index = selectedCards.findIndex(x => x === lastItem);
+    //   selectedCards.splice(index, 1);
+    // });
 
+  function modalBody() {
+      // תיצור את המודל דינמית
+      const modalContainer = document.createElement("div");
+      modalContainer.classList.add("modal-container");
 
-      const btns = document.querySelectorAll('.btn-primary');
-      btns.forEach(function (btn) {
-        btn.addEventListener("click", async function (event) {
-          event.preventDefault();
-          const moreInfo = this.closest('.card').querySelector('.moreInfo');
-          const spinnerContainer = this.closest('.card').querySelector('.spinner-container');
+      // תיצור את התוכן של המודל
+      const modalContent = document.createElement("div");
+      modalContent.classList.add("modal-content");
+      modalContent.innerHTML = `
+      <div id = "${photos[i].id}" class="card" style="width: 18rem;">
+      <div id = "Toggle" class="form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].id}">
+    </div>
+        <img src="${photos[i].image}" class="card-coins">
+        <div class="card-body">
+          <h5 class="card-title">${photos[i].symbol}</h5>
+          <a href="" class="btn btn-primary">more info</a>
+          <div class="spinner-container">
+<div class="spinner"></div>
+</div>
+        </div>
+         <div class="moreInfo">
+         </div>
+      </div>
+    <h2>This is the modal content</h2>
+    <p>More information goes here...</p>
+    <button id="closeModalBtn">Close</button>
 
-          // הצגת הספינר
-          spinnerContainer.style.display = "flex";
+  `;
 
-          const cryptoId = this.closest(`.card`).id;
-          const json = await getCrypto(cryptoId);
+      // תיצוב האירוע לכפתור הסגירה
+      const closeModalBtn = modalContent.querySelector("#closeModalBtn");
+      closeModalBtn.addEventListener("click", () => {
+        modalContainer.remove();
+      });
 
-          // הסתרת הספינר לאחר שקיבלנו את המידע
-          spinnerContainer.style.display = "none";
+      // תחבור את התוכן למודל
+      modalContainer.appendChild(modalContent);
 
-          moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
-          moreInfo.innerHTML = `
+      // הוסף את המודל לדף
+      document.body.appendChild(modalContainer);
+    }
+    const btns = document.querySelectorAll('.btn-primary');
+    btns.forEach(function (btn) {
+      btn.addEventListener("click", async function (event) {
+        event.preventDefault();
+        const moreInfo = this.closest('.card').querySelector('.moreInfo');
+        const spinnerContainer = this.closest('.card').querySelector('.spinner-container');
+
+        // הצגת הספינר
+        spinnerContainer.style.display = "flex";
+
+        const cryptoId = this.closest(`.card`).id;
+        const json = await getCrypto(cryptoId);
+
+        // הסתרת הספינר לאחר שקיבלנו את המידע
+        spinnerContainer.style.display = "none";
+
+        moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
+        moreInfo.innerHTML = `
           <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
           <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
           <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
         `
-        });
-
-        async function getCrypto(id) {
-          const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
-          const json = await data.json();
-          return json;
-        }
       });
-    }
-  })
+
+      async function getCrypto(id) {
+        const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
+        const json = await data.json();
+        return json;
+      }
+    });
+  }
+})
 
 
