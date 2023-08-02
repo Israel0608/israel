@@ -2,9 +2,6 @@
 $(() => {
   const moreInfo = [];
   let cards = [];
-  const Toggle = document.querySelector('.Toggle');
-  Toggle.addEventListener("click", showModal);
-  const checkBox = document.getElementsByClassName(`form-check-input`);
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
   const reportsLink = document.getElementById("reportsLink");
@@ -175,48 +172,48 @@ $(() => {
     //   selectedCards.splice(index, 1);
     // });
 
-  function modalBody() {
-      // תיצור את המודל דינמית
-      const modalContainer = document.createElement("div");
-      modalContainer.classList.add("modal-container");
+    //   function modalBody() {
+    //       // תיצור את המודל דינמית
+    //       const modalContainer = document.createElement("div");
+    //       modalContainer.classList.add("modal-container");
 
-      // תיצור את התוכן של המודל
-      const modalContent = document.createElement("div");
-      modalContent.classList.add("modal-content");
-      modalContent.innerHTML = `
-      <div id = "${photos[i].id}" class="card" style="width: 18rem;">
-      <div id = "Toggle" class="form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].id}">
-    </div>
-        <img src="${photos[i].image}" class="card-coins">
-        <div class="card-body">
-          <h5 class="card-title">${photos[i].symbol}</h5>
-          <a href="" class="btn btn-primary">more info</a>
-          <div class="spinner-container">
-<div class="spinner"></div>
-</div>
-        </div>
-         <div class="moreInfo">
-         </div>
-      </div>
-    <h2>This is the modal content</h2>
-    <p>More information goes here...</p>
-    <button id="closeModalBtn">Close</button>
+    //       // תיצור את התוכן של המודל
+    //       const modalContent = document.createElement("div");
+    //       modalContent.classList.add("modal-content");
+    //       modalContent.innerHTML = `
+    //       <div id = "${photos[i].id}" class="card" style="width: 18rem;">
+    //       <div id = "Toggle" class="form-switch">
+    //       <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].id}">
+    //     </div>
+    //         <img src="${photos[i].image}" class="card-coins">
+    //         <div class="card-body">
+    //           <h5 class="card-title">${photos[i].symbol}</h5>
+    //           <a href="" class="btn btn-primary">more info</a>
+    //           <div class="spinner-container">
+    // <div class="spinner"></div>
+    // </div>
+    //         </div>
+    //          <div class="moreInfo">
+    //          </div>
+    //       </div>
+    //     <h2>This is the modal content</h2>
+    //     <p>More information goes here...</p>
+    //     <button id="closeModalBtn">Close</button>
 
-  `;
+    //   `;
 
-      // תיצוב האירוע לכפתור הסגירה
-      const closeModalBtn = modalContent.querySelector("#closeModalBtn");
-      closeModalBtn.addEventListener("click", () => {
-        modalContainer.remove();
-      });
+    //       // תיצוב האירוע לכפתור הסגירה
+    //       const closeModalBtn = modalContent.querySelector("#closeModalBtn");
+    //       closeModalBtn.addEventListener("click", () => {
+    //         modalContainer.remove();
+    //       });
 
-      // תחבור את התוכן למודל
-      modalContainer.appendChild(modalContent);
+    //       // תחבור את התוכן למודל
+    //       modalContainer.appendChild(modalContent);
 
-      // הוסף את המודל לדף
-      document.body.appendChild(modalContainer);
-    }
+    //       // הוסף את המודל לדף
+    //       document.body.appendChild(modalContainer);
+    //     }
     const btns = document.querySelectorAll('.btn-primary');
     btns.forEach(function (btn) {
       btn.addEventListener("click", async function (event) {
