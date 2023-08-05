@@ -1,12 +1,16 @@
 "use strict";
 $(() => {
-  const moreInfo = [];
-  let cards = [];
   userImage();
   const currenciesLink = document.getElementById("currenciesLink");
   const reportsLink = document.getElementById("reportsLink");
   const aboutLink = document.getElementById("aboutLink");
-  const mainContent = document.getElementById("mainContent")
+  const mainContent = document.getElementById("mainContent");
+  // const selectedCardsModal = document.getElementById("staticBackdrop");
+  // const myModal = new bootstrap.Modal(selectedCardsModal);
+  // const loadingModal = document.getElementById("loadingModal");
+  // const modalLoad = new bootstrap.Modal(loadingModal);
+  // const checkboxes = document.getElementsByClassName("toggle-one");
+  // const selectedCards = [];
 
   currenciesLink.addEventListener("click", displayCurrencies);
   reportsLink.addEventListener("click", displayReports);
@@ -72,148 +76,11 @@ $(() => {
         </div>
       `);
     }
-    // const modal = new bootstrap.Modal(`#exampleModal`);
-    // let modalArr = [];
-    // $("#mainContent").on("click", ".form-check-input", function () {
-    //   const cardId = $(this).closest(".card").find(".moreInfoBtn").attr("id");
-    //   const index = modalArr.indexOf(cardId);
-    //   if (index !== -1) {
-    //     modalArr.splice(index, 1);
 
-    //     $(`#${cardId}_modalSwitch`).prop("checked", false);
-    //   } else {
-    //     modalArr.push(cardId);
-    //     $(`#${cardId}_modalSwitch`).prop("checked", true);
-    //   }
-    //   console.log(modalArr);
-
-    //   if (modalArr.length >= 2) {
-    //     showModal();
-    //   }
-    // });
-    // function showModal() {
-    //   const selectedCardsData = [];
-
-
-    //   for (const id of modalArr) {
-    //     const cardData = cards.find(card => card.id === id);
-    //     if (cardData) {
-    //       selectedCardsData.push(cardData)
-    //     }
-
-    //   }
-
-
-
-    //   let modalHtml = "";
-    //   for (const data of selectedCardsData) {
-    //     modalHtml += `
-    //       <div class="card">
-    //       <h5 class="card-header">${data.symbol}</h5>
-    //       <div class="logo-title">
-    //         <!-- logo -->
-    //         <img src="${data.image}" class="modal-logo" alt="my-logo" width="20%">
-    //         <br></br>
-    //         <h5 class="card-title">${data.name}</h5>
-    //       </div>
-    //       <!-- Switch box -->
-    //       <div class="form-check form-switch">
-    //         <input class="form-check-input-modal" type="checkbox" role="switch" id="${data.id}_modalSwitch">
-    //       </div>
-    //     </div>
-
-    //       `
-    //   }
-    //   $(".modal-footer").html(modalHtml);
-
-    //   modal.show()
-
-    // $(".toggleCheck").on("click", function () {
-    //   if (this.checked === true) {
-    //     selectedCards.push(this.value);
-    //   }
-    //   if (this.checked === false) {
-    //     let uncheck = this.value;
-    //     const indexUncheck = selectedCards.findIndex((name) => name === uncheck);
-    //     selectedCards.splice(indexUncheck, 1);
-    //   }
-    //   if (selectedCards.length > 5) {
-    //     myModal.show();
-    //   }
-
-    //     const inModal = document.getElementById("inModal");
-    //     let htmlCard = "";
-    //     for (let i = 0; i < photos.length - 1; i++) {
-    //       htmlCard += `
-    //         <div class="card">
-    //             <div class="card-body cardModal">
-    //               <span class="nameSelectCard">${photos[i]}</span>
-    //               <span class="btn-toggle selected-toggle">
-    //               <input class="toggle-one ee" data-bs-dismiss="modal" type="checkbox" name="modalCheck" value="${selectedCards[i]}" id="checkModal${i}">
-    //               <label class="toggle" for="checkModal${i}"></label>
-    //             </span>
-    //             </div>
-    //           </div>`;
-    //     }
-    //     inModal.innerHTML = htmlCard;
-    //   })
-    //   }
-    // })
-
-    // const modalClose = document.getElementById('modalClose');
-    // modalClose.addEventListener('click', () => {
-    //   const lastItem = selectedCards[photos.length - 1];
-    //   for (const x of checkboxes) {
-    //     if (x.value === lastItem) {
-    //       x.checked = false;
-    //     }
-    //   }
-    //   const index = selectedCards.findIndex(x => x === lastItem);
-    //   selectedCards.splice(index, 1);
-    // });
-
-    //   function modalBody() {
-    //       // תיצור את המודל דינמית
-    //       const modalContainer = document.createElement("div");
-    //       modalContainer.classList.add("modal-container");
-
-    //       // תיצור את התוכן של המודל
-    //       const modalContent = document.createElement("div");
-    //       modalContent.classList.add("modal-content");
-    //       modalContent.innerHTML = `
-    //       <div id = "${photos[i].id}" class="card" style="width: 18rem;">
-    //       <div id = "Toggle" class="form-switch">
-    //       <input class="form-check-input" type="checkbox" role="switch" value="${photos[i].id}">
-    //     </div>
-    //         <img src="${photos[i].image}" class="card-coins">
-    //         <div class="card-body">
-    //           <h5 class="card-title">${photos[i].symbol}</h5>
-    //           <a href="" class="btn btn-primary">more info</a>
-    //           <div class="spinner-container">
-    // <div class="spinner"></div>
-    // </div>
-    //         </div>
-    //          <div class="moreInfo">
-    //          </div>
-    //       </div>
-    //     <h2>This is the modal content</h2>
-    //     <p>More information goes here...</p>
-    //     <button id="closeModalBtn">Close</button>
-
-    //   `;
-
-    //       // תיצוב האירוע לכפתור הסגירה
-    //       const closeModalBtn = modalContent.querySelector("#closeModalBtn");
-    //       closeModalBtn.addEventListener("click", () => {
-    //         modalContainer.remove();
-    //       });
-
-    //       // תחבור את התוכן למודל
-    //       modalContainer.appendChild(modalContent);
-
-    //       // הוסף את המודל לדף
-    //       document.body.appendChild(modalContainer);
-    //     }
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
     const btns = document.querySelectorAll('.btn-primary');
     btns.forEach(function (btn) {
       btn.addEventListener("click", async function (event) {
@@ -227,6 +94,7 @@ $(() => {
         const cryptoId = this.closest(`.card`).id;
         const json = await getCrypto(cryptoId);
 
+        await sleep(2000);
         // הסתרת הספינר לאחר שקיבלנו את המידע
         spinnerContainer.style.display = "none";
 
