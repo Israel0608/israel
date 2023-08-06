@@ -1,31 +1,33 @@
 "use strict";
 $(() => {
   userImage();
+
   const currenciesLink = document.getElementById("currenciesLink");
   const reportsLink = document.getElementById("reportsLink");
   const aboutLink = document.getElementById("aboutLink");
   const mainContent = document.getElementById("mainContent");
-  // const selectedCardsModal = document.getElementById("staticBackdrop");
-  // const myModal = new bootstrap.Modal(selectedCardsModal);
-  // const loadingModal = document.getElementById("loadingModal");
-  // const modalLoad = new bootstrap.Modal(loadingModal);
-  // const checkboxes = document.getElementsByClassName("toggle-one");
-  // const selectedCards = [];
 
   currenciesLink.addEventListener("click", displayCurrencies);
   reportsLink.addEventListener("click", displayReports);
   aboutLink.addEventListener("click", displayAbout);
 
-  function displayCurrencies() {
-    mainContent.innerHTML = `<h1>Currencies...</h1>`
+  async function displayCurrencies() {
+    const photos = await getJson();
+    displayCrypto(photos);
   }
 
   function displayReports() {
-    mainContent.innerHTML = `<h1>Reports...</h1>`
+    mainContent.innerHTML = `<h1>Reports...</h1>
+    <img src="assets/working.webp" width="100%" height="100%">`
   }
 
   function displayAbout() {
-    mainContent.innerHTML = `<h1>About...</h1>`
+    mainContent.innerHTML = `<h1>About...</h1>
+    <img src="assets/israelSofer.jpg" width="200px">
+    <p>A few words about myself: Hi, I'm Israel Sofer, I'm 20 years old, I work at Aroma (coffee shop) and I study at John Bryce full stack web 😁</p>
+    <p>And a few words about the project I did: Decentralization: Unlike traditional currencies issued and controlled by governments or financial institutions, cryptocurrencies operate on decentralized networks using blockchain technology. This means no single entity has full control over the currency, enhancing security and reducing the risk of manipulation.
+
+    Blockchain Technology: Cryptocurrencies rely on blockchain, a distributed ledger that records all transactions across a network of computers. Each block contains a group of transactions, and once added to the blockchain, it becomes immutable, creating a transparent and tamper-resistant record of all transactions.</p>`
   }
 
   const searchBar = document.getElementById("searchBar");
@@ -87,15 +89,14 @@ $(() => {
         event.preventDefault();
         const moreInfo = this.closest('.card').querySelector('.moreInfo');
         const spinnerContainer = this.closest('.card').querySelector('.spinner-container');
-
-        // הצגת הספינר
+        
+       
         spinnerContainer.style.display = "flex";
 
         const cryptoId = this.closest(`.card`).id;
+        await sleep(2000);
         const json = await getCrypto(cryptoId);
 
-        await sleep(2000);
-        // הסתרת הספינר לאחר שקיבלנו את המידע
         spinnerContainer.style.display = "none";
 
         moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
@@ -106,6 +107,8 @@ $(() => {
         `
       });
 
+      
+
       async function getCrypto(id) {
         const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
         const json = await data.json();
@@ -114,5 +117,3 @@ $(() => {
     });
   }
 })
-
-
