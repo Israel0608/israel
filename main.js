@@ -115,25 +115,31 @@ $(() => {
         event.preventDefault();
         const moreInfo = this.closest('.card').querySelector('.moreInfo');
         const spinnerContainer = this.closest('.card').querySelector('.spinner-container');
-
-
-        spinnerContainer.style.display = "flex";
-
-        const cryptoId = this.closest(`.card`).id;
-        await sleep(2000);
-        const json = await getCrypto(cryptoId);
-
-        const id = this.closest(".card").id;
-        spinnerContainer.style.display = "none";
-
-        moreInfo.style.display = (moreInfo.style.display === 'none') ? 'block' : 'none';
-        moreInfo.innerHTML = `
-          <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
-          <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
-          <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
-        `
-        saveToSessionStorage(id, moreInfo.innerHTML);
-      });
+    
+        if (moreInfo.style.display === 'none' || moreInfo.style.display === '') {
+          spinnerContainer.style.display = "flex";
+    
+          const cryptoId = this.closest('.card').id;
+          await sleep(2000);
+          const json = await getCrypto(cryptoId);
+    
+          const id = this.closest('.card').id;
+          spinnerContainer.style.display = "none";
+    
+          moreInfo.style.display = 'block';
+          moreInfo.innerHTML = `
+            <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
+            <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
+            <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
+          `;
+          saveToSessionStorage(id, moreInfo.innerHTML);
+        } else {
+          moreInfo.style.display = 'none';
+        }
+      }); 
+    });
+    
+    
 
 
 
@@ -143,6 +149,7 @@ $(() => {
         return json;
       }
       let toggleButtonClickCount = 0;
+
 
       function showModalIfNeeded() {
         if (toggleButtonClickCount > 5) {
@@ -170,7 +177,5 @@ $(() => {
       $(document).ready(function () {
         showModalIfNeeded(); 
       });
-
+}
     });
-  }
-})
