@@ -115,67 +115,75 @@ $(() => {
         event.preventDefault();
         const moreInfo = this.closest('.card').querySelector('.moreInfo');
         const spinnerContainer = this.closest('.card').querySelector('.spinner-container');
-    
+
         if (moreInfo.style.display === 'none' || moreInfo.style.display === '') {
           spinnerContainer.style.display = "flex";
-    
+
           const cryptoId = this.closest('.card').id;
           await sleep(2000);
           const json = await getCrypto(cryptoId);
-    
+
           const id = this.closest('.card').id;
           spinnerContainer.style.display = "none";
-    
+
           moreInfo.style.display = 'block';
           moreInfo.innerHTML = `
-            <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
-            <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
-            <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
-          `;
+        <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
+        <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
+        <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
+      `;
           saveToSessionStorage(id, moreInfo.innerHTML);
         } else {
           moreInfo.style.display = 'none';
         }
-      }); 
+      });
     });
-    
-    
 
 
 
-      async function getCrypto(id) {
-        const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
-        const json = await data.json();
-        return json;
-      }
-      let toggleButtonClickCount = 0;
+    async function getCrypto(id) {
+      const data = await fetch(`https://api.coingecko.com/api/v3/coins/${id}`);
+      const json = await data.json();
+      return json;
+    }
+    let toggleButtonClickCount = 0;
+const cardContents = [];
 
-
-      function showModalIfNeeded() {
-        if (toggleButtonClickCount > 5) {
-          $('#staticBackdrop').modal('show');
-        }
-      }
-
-      const toggleButtons = document.querySelectorAll('.form-switch input[type="checkbox"]');
-      toggleButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          if (button.checked) {
-            toggleButtonClickCount++;
-            showModalIfNeeded();
-          } else {
-            toggleButtonClickCount--;
-          }
-        });
-      });
-
-     
-      const modalCloseButton = document.getElementById('modalClose');
-      modalCloseButton.addEventListener('click', () => {
-        toggleButtonClickCount--;
-      });
-      $(document).ready(function () {
-        showModalIfNeeded(); 
-      });
+function showModalIfNeeded() {
+  if (toggleButtonClickCount > 5) {
+    const lastSixContents = cardContents.slice(-6);
+    const modalBody = document.querySelector('#staticBackdrop .modal-body');
+    modalBody.innerHTML = lastSixContents.join('');
+    $('#staticBackdrop').modal('show');
+  }
 }
-    });
+
+const toggleButtons = document.querySelectorAll('.form-switch input[type="checkbox"]');
+toggleButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    if (button.checked) {
+      toggleButtonClickCount++;
+      cardContents.push(button.closest('.card').innerHTML);
+      showModalIfNeeded();
+    } else {
+      toggleButtonClickCount--;
+      const cardIndex = cardContents.indexOf(button.closest('.card').innerHTML);
+      if (cardIndex !== -1) {
+        cardContents.splice(cardIndex, 1);
+      }
+    }
+  });
+});
+
+const modalCloseButton = document.getElementById('modalClose');
+modalCloseButton.addEventListener('click', () => {
+  toggleButtonClickCount--;
+});
+
+$(document).ready(function () {
+  showModalIfNeeded();
+  })
+  }
+})
+
+
