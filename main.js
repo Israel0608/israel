@@ -146,43 +146,83 @@ $(() => {
       const json = await data.json();
       return json;
     }
+
     let toggleButtonClickCount = 0;
-const cardContents = [];
-
-function showModalIfNeeded() {
-  if (toggleButtonClickCount > 5) {
-    const lastSixContents = cardContents.slice(-6);
-    const modalBody = document.querySelector('#staticBackdrop .modal-body');
-    modalBody.innerHTML = lastSixContents.join('');
-    $('#staticBackdrop').modal('show');
-  }
-}
-
-const toggleButtons = document.querySelectorAll('.form-switch input[type="checkbox"]');
-toggleButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    if (button.checked) {
-      toggleButtonClickCount++;
-      cardContents.push(button.closest('.card').innerHTML);
-      showModalIfNeeded();
-    } else {
-      toggleButtonClickCount--;
-      const cardIndex = cardContents.indexOf(button.closest('.card').innerHTML);
-      if (cardIndex !== -1) {
-        cardContents.splice(cardIndex, 1);
+    const cardContents = [];
+    
+    function showModalIfNeeded() {
+      if (toggleButtonClickCount > 5) {
+        const lastSixContents = cardContents.slice(-6);
+        const modalBody = document.querySelector('#staticBackdrop .modal-body');
+        modalBody.innerHTML = lastSixContents.join('');
+        $('#staticBackdrop').modal('show');
+    
+        // Set all modal toggle buttons to 'on' state
+        const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
+        modalToggleButtons.forEach((button) => {
+          button.checked = true;
+          button.addEventListener('click', modalToggleButtonHandler);
+        });
       }
     }
-  });
-});
+    
+    const toggleButtons = document.querySelectorAll('.form-switch input[type="checkbox"]');
+    toggleButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        if (button.checked) {
+          toggleButtonClickCount++;
+          cardContents.push(button.closest('.card').innerHTML);
+          showModalIfNeeded();
+        } else {
+          toggleButtonClickCount--;
+          const cardIndex = cardContents.indexOf(button.closest('.card').innerHTML);
+          if (cardIndex !== -1) {
+            cardContents.splice(cardIndex, 1);
+          }
+        }
+    
+        // Update modal toggle buttons listeners after changing state
+        updateModalToggleButtonsListeners();
+      });
+    });
+    
+    function updateModalToggleButtonsListeners() {
+      const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
+      modalToggleButtons.forEach((button) => {
+        button.removeEventListener('click', modalToggleButtonHandler);
+        button.addEventListener('click', modalToggleButtonHandler);
+      });
+    }
+    
+    function modalToggleButtonHandler() {
+      // Prevent changing state in the modal
+      this.checked = true;
+      const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
+      let allChecked = true;
+      modalToggleButtons.forEach((button) => {
+        if (!button.checked) {
+          allChecked = false;
+        }
+      });
+      if (allChecked) {
+        $('#staticBackdrop').modal('hide');
+        toggleButtonClickCount--;
+      }
+    }
+    
+    const modalCloseButton = document.getElementById('modalClose');
+    modalCloseButton.addEventListener('click', () => {
+      toggleButtonClickCount--;
+      updateModalToggleButtonsListeners();
+    });
+    
+    $(document).ready(function () {
+      showModalIfNeeded();
+      updateModalToggleButtonsListeners();
+    });
+    
 
-const modalCloseButton = document.getElementById('modalClose');
-modalCloseButton.addEventListener('click', () => {
-  toggleButtonClickCount--;
-});
 
-$(document).ready(function () {
-  showModalIfNeeded();
-  })
   }
 })
 
