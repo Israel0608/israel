@@ -1,7 +1,8 @@
 "use strict";
 $(() => {
-  userImage();
+  virtualCurrencies();
 
+  const cryptoCards = [];
   function saveToSessionStorage(key, moreInfo) {
     sessionStorage.setItem(key, JSON.stringify(moreInfo));
   }
@@ -14,15 +15,16 @@ $(() => {
 
 
 
-
   const currenciesLink = document.getElementById("currenciesLink");
   const reportsLink = document.getElementById("reportsLink");
   const aboutLink = document.getElementById("aboutLink");
   const mainContent = document.getElementById("mainContent");
 
+
   currenciesLink.addEventListener("click", displayCurrencies);
   reportsLink.addEventListener("click", displayReports);
   aboutLink.addEventListener("click", displayAbout);
+
 
   async function displayCurrencies() {
     mainContent.innerHTML = '';
@@ -61,18 +63,18 @@ $(() => {
     const searchValue = searchBar.value;
     const Data = await getJson("api.json");
     if (searchValue) {
-      const result = Data.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1)
+      const filteredData = Data.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1)
       $("#mainContent").empty();
-      displayCrypto(result);
+      displayCrypto(filteredData);
       // console.log(result)
     } else {
-      const result = Data.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1)
+      const filteredData = Data.filter(item => item.id.indexOf(searchValue) > -1 || item.symbol.indexOf(searchValue) > -1)
       $("#mainContent").empty();
-      displayCrypto(result);
+      displayCrypto(filteredData);
     }
 
   })
-  async function userImage() {
+  async function virtualCurrencies() {
     const card = await getJson();
     displayCrypto(card);
   }
@@ -103,6 +105,7 @@ $(() => {
            </div>
         </div>
       `);
+      cryptoCards.push(photos);
     }
 
     function sleep(ms) {
@@ -120,7 +123,6 @@ $(() => {
           spinnerContainer.style.display = "flex";
 
           const cryptoId = this.closest('.card').id;
-          await sleep(2000);
           const json = await getCrypto(cryptoId);
 
           const id = this.closest('.card').id;
@@ -128,10 +130,15 @@ $(() => {
 
           moreInfo.style.display = 'block';
           moreInfo.innerHTML = `
+          
         <p class="card-text">price in USD: ${json.market_data.current_price.usd}$</p>
+
         <p class="card-text">price in EURO: ${json.market_data.current_price.eur}€</p>
+
         <p class="card-text">price in ILS: ${json.market_data.current_price.ils}₪</p>
+
       `;
+
           saveToSessionStorage(id, moreInfo.innerHTML);
         } else {
           moreInfo.style.display = 'none';
@@ -149,15 +156,16 @@ $(() => {
 
     let toggleButtonClickCount = 0;
     const cardContents = [];
-    
+
+
     function showModalIfNeeded() {
       if (toggleButtonClickCount > 5) {
         const lastSixContents = cardContents.slice(-6);
         const modalBody = document.querySelector('#staticBackdrop .modal-body');
         modalBody.innerHTML = lastSixContents.join('');
         $('#staticBackdrop').modal('show');
-    
-        // Set all modal toggle buttons to 'on' state
+
+
         const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
         modalToggleButtons.forEach((button) => {
           button.checked = true;
@@ -165,7 +173,7 @@ $(() => {
         });
       }
     }
-    
+
     const toggleButtons = document.querySelectorAll('.form-switch input[type="checkbox"]');
     toggleButtons.forEach((button, index) => {
       button.addEventListener('click', () => {
@@ -180,12 +188,11 @@ $(() => {
             cardContents.splice(cardIndex, 1);
           }
         }
-    
-        // Update modal toggle buttons listeners after changing state
+
         updateModalToggleButtonsListeners();
       });
     });
-    
+
     function updateModalToggleButtonsListeners() {
       const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
       modalToggleButtons.forEach((button) => {
@@ -193,9 +200,8 @@ $(() => {
         button.addEventListener('click', modalToggleButtonHandler);
       });
     }
-    
+
     function modalToggleButtonHandler() {
-      // Prevent changing state in the modal
       this.checked = true;
       const modalToggleButtons = document.querySelectorAll('#staticBackdrop .form-switch input[type="checkbox"]');
       let allChecked = true;
@@ -209,19 +215,17 @@ $(() => {
         toggleButtonClickCount--;
       }
     }
-    
+
     const modalCloseButton = document.getElementById('modalClose');
     modalCloseButton.addEventListener('click', () => {
       toggleButtonClickCount--;
       updateModalToggleButtonsListeners();
     });
-    
+
     $(document).ready(function () {
       showModalIfNeeded();
       updateModalToggleButtonsListeners();
     });
-    
-
 
   }
 })

@@ -8,6 +8,10 @@ html {
   color: white;
 }
 
+h1{
+  text-align: center;
+}
+
 .navbar-nav .nav-link {
   color: black; 
 }
